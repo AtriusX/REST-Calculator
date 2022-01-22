@@ -1,4 +1,4 @@
-package xyz.atrius.demo.parser
+package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
 import xyz.atrius.demo.math.Node
