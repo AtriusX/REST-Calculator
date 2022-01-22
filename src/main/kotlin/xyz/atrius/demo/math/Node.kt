@@ -17,4 +17,13 @@ interface Node {
      * @return The evaluation result of the current tree.
      */
     fun evaluate(): Double
+
+    /**
+     * Forces the inclusion of a custom toString method. This is necessary
+     * since our expression tree needs to be represented properly when printed
+     * out as a string.
+     *
+     * @return The string representation of the current expression.
+     */
+    override fun toString(): String
 }

@@ -9,9 +9,23 @@ package xyz.atrius.demo.math
  *
  * @param value The constant value stored by our object.
  */
-class Constant(
+@JvmInline
+value class Constant(
     private val value: Double
 ) : Node {
 
+    /**
+     * A constant expression simply returns the stored value as its evaluation.
+     *
+     * @return The stored value of this object.
+     */
     override fun evaluate(): Double = value
+
+    /**
+     * Converts the constant to a string, rounded to 2 decimal places.
+     *
+     * @return The rounded representation of this constant.
+     */
+    override fun toString(): String =
+        String.format("%.2f", evaluate())
 }

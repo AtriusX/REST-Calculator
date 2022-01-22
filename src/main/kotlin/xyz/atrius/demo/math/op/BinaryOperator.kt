@@ -15,6 +15,11 @@ abstract class BinaryOperator(
 ) : Node {
 
     /**
+     * Determines the character used in printing the expression.
+     */
+    internal abstract val operator: Char
+
+    /**
      * Performs a given operation against the calculated results
      * of the left and right side expressions. Each side can be
      * either a constant or subtree of operations.
@@ -35,4 +40,12 @@ abstract class BinaryOperator(
      */
     override fun evaluate(): Double =
         operation(left, right)
+
+    /**
+     * Prints all operator expressions in similar form to "a + b".
+     *
+     * @return The string representation of the given operation.
+     */
+    override fun toString(): String =
+        "$left $operator $right"
 }
