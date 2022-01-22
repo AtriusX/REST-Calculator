@@ -15,6 +15,8 @@ class ExpressionValidator : Validator {
 
     private val ops: Set<Char> =
         setOf('+', '-', '*', '/', '^')
+    private val number: Validator =
+        NumberValidator()
 
     /**
      * Validate the input to check if the format matches that of a valid
@@ -32,7 +34,10 @@ class ExpressionValidator : Validator {
             when (c) {
                 // Clears the current item and skips to next character
                 ' ' -> {
-                    val error = cur.checkNumber()
+                    // Skip whitespace
+                    if (cur.isEmpty()) continue
+                    // Check for errors in constant format
+                    val error = number.validate(cur.toString())
                     // Return any raised errors or continue to next character
                     if (error != null) {
                         return error
@@ -81,20 +86,11 @@ class ExpressionValidator : Validator {
             }
             prev = c
         }
-        // Check if all scopes closed properly and the final value is valid
-        return if (depth == 0)
-            cur.checkNumber() else AppError.UnexpectedTermination
-    }
-
-    private fun StringBuilder.isNumber(): Boolean {
-        // Matches integer and floating point numbers
-        return toString().toDoubleOrNull() != null
-    }
-
-    private fun StringBuilder.checkNumber(): AppError? {
-        // We are tracking a multi-character item (a constant value)
-        // If the current value is not a valid number then an error is raised
-        return if (isNotEmpty() && !isNumber())
-            AppError.InvalidConstant else null
+        // Check if all scopes closed properly and that the final value is valid
+        return when {
+            cur.isNotEmpty() -> number.validate(cur.toString())
+            depth == 0       -> null
+            else             -> AppError.UnexpectedTermination
+        }
     }
 }
