@@ -13,8 +13,8 @@ class ApiController {
     @GetMapping("/calc/{equation}")
     fun calc(
         @PathVariable equation: String
-    ): Either<Error, Answer> {
-        return Either.Left(Error("${Random.nextInt(10000)} Invalid equation: $equation"))
+    ): Either<AppError, Answer> {
+        return Either.Left(AppError.Custom("${Random.nextInt(10000)} Invalid equation: $equation"))
 //		return Either.Right(Answer("", 0.0))
     }
 }

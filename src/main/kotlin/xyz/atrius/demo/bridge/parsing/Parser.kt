@@ -1,6 +1,7 @@
 package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
+import xyz.atrius.demo.data.AppError
 import xyz.atrius.demo.math.Node
 
 /**
@@ -21,5 +22,5 @@ interface Parser {
      * @param input The string to attempt parsing for.
      * @return      The determined node tree, or an error if parsing fails.
      */
-    fun parse(input: String): Either<Error, Node>
+    fun parse(input: String): Either<AppError, Node>
 }
