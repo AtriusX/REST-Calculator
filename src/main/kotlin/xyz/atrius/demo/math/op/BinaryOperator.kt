@@ -47,5 +47,5 @@ abstract class BinaryOperator(
      * @return The string representation of the given operation.
      */
     override fun toString(): String =
-        "$left $operator $right"
+        "($left $operator $right)"
 }
