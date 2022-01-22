@@ -18,9 +18,6 @@ class Div(
     override val operator: Char = '/'
 
     override fun operation(left: Node, right: Node): Double {
-        val r = right.evaluate()
-        if (r == 0.0)
-            throw ArithmeticException("Cannot divide by 0!")
-        return left.evaluate() / r
+        return left.evaluate() / right.evaluate()
     }
 }

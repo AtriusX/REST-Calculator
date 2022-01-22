@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import xyz.atrius.demo.math.op.*
-import kotlin.ArithmeticException
+import java.lang.ArithmeticException
 
 /**
  * @author Atrius
@@ -132,9 +132,7 @@ class MathTests {
             Constant(100.0),
             Constant(0.0)
         )
-        assertThrows<ArithmeticException> {
-            zero.evaluate()
-        }
+        assert(zero.evaluate() == Double.POSITIVE_INFINITY)
         assert(zero.toString() == "(100.00 / 0.00)")
     }
 
@@ -197,8 +195,6 @@ class MathTests {
                 Constant(0.0)
             )
         )
-        assertThrows<ArithmeticException> {
-            zero.evaluate()
-        }
+        assert(zero.evaluate() == Double.POSITIVE_INFINITY)
     }
 }
