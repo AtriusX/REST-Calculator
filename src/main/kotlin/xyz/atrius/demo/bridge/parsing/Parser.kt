@@ -11,7 +11,7 @@ import xyz.atrius.demo.math.Node
  * natural language instead of through programmatic constructs. This system will then be
  * used as the bridge from natural language to logical constructs.
  */
-interface ExpressionParser {
+interface Parser {
 
     /**
      * Parses an input [String] into a [Node] tree structure. Alternatively, if parsing
