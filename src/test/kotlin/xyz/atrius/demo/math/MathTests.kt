@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import xyz.atrius.demo.math.op.*
-import java.lang.ArithmeticException
+import kotlin.ArithmeticException
 
 /**
  * @author Atrius
@@ -186,5 +186,19 @@ class MathTests {
         // Small workaround for floating point rounding problems
         assert(exp.evaluate() in 8.3 .. 8.4)
         assert(exp.toString() == "((2.00 + (4.00 / 5.00)) * 3.00)")
+        // Test expressions that have zero-division in their evaluation
+        val zero = Div(
+            Add(
+                Constant(3.0),
+                Constant(30.0)
+            ),
+            Mul(
+                Constant(10.0),
+                Constant(0.0)
+            )
+        )
+        assertThrows<ArithmeticException> {
+            zero.evaluate()
+        }
     }
 }
