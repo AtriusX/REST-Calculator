@@ -1,13 +1,12 @@
 package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
+import arrow.core.left
+import xyz.atrius.demo.data.OperationManager
 import xyz.atrius.demo.data.error.ParseError
 import xyz.atrius.demo.math.Constant
 import xyz.atrius.demo.math.Node
 import xyz.atrius.demo.math.op.*
-
-private typealias OperatorFunction =
-    (left: Node, right: Node) -> BinaryOperator
 
 /**
  * @author Atrius
@@ -17,10 +16,6 @@ private typealias OperatorFunction =
  * us to focus on the parsing of an expression's order of operations.
  */
 class SimpleMathParser : Parser {
-
-    // TODO: Move this to a dedicated operator repository
-    private val ops: Set<Char> =
-        setOf('+', '-', '*', '/', '^')
 
     /**
      * Parses a simple expression into a [Node] tree. This structure
@@ -32,6 +27,7 @@ class SimpleMathParser : Parser {
      * @return      The parsed node object, or a [ParseError].
      */
     override fun parse(input: String): Either<ParseError, Node> {
+        println(OperationManager)
         // Internal function to add precedence variable, since we
         // do not have the ability to add a parameter to an
         // overridden function.
@@ -44,11 +40,16 @@ class SimpleMathParser : Parser {
                 return Either.Left(ParseError.EmptyExpression)
             // Make sure the expression isn't bordered by operators aside from
             val trimmed = value.trim()
-            if (trimmed.firstOrNull()?.let { it in ops && it != '-' } == true || trimmed.lastOrNull() in ops)
-                return Either.Left(ParseError.MalformedExpression)
+            if (trimmed.firstOrNull()?.let { it in OperationManager && it != '-' } == true
+                || trimmed.lastOrNull() in OperationManager
+            ) return Either.Left(ParseError.MalformedExpression)
             // Make sure the expression does not contain any invalid characters
-            if (value.any { it !in ops && it != '.' && it !in '0' .. '9' && it != ' ' })
-                return Either.Left(ParseError.InvalidOperation)
+            if (value.any {
+                    it !in OperationManager
+                    && it != '.'
+                    && it !in '0' .. '9'
+                    && it != ' ' }
+            ) return Either.Left(ParseError.InvalidOperation)
             // If the input is a number then we return it as a constant
             value.toDoubleOrNull()?.let {
                 return Either.Right(Constant(it))
@@ -56,7 +57,7 @@ class SimpleMathParser : Parser {
             // Find the rightmost instance of the next operator with the same precedence
             var index: Int = -1
             for (i in value.lastIndex downTo 0)
-                if (getPrecedence(value[i]) == precedence && !value.skipOperator(i)) {
+                if (OperationManager.getPrecedence(value[i]) == precedence && !value.skipOperator(i)) {
                     index = i
                     break
                 }
@@ -68,7 +69,8 @@ class SimpleMathParser : Parser {
                 val left  = value.substring(0, index)
                 val right = value.substring(index + 1)
                 // Get the constructor for this operator or throw an error if invalid
-                val create = getOperator(op)
+                val create = OperationManager[op] ?:
+                    return Either.Left(ParseError.InvalidOperation)
                 // Build the left and right nodes, or raise an error if a failure occurs
                 val l = build(left, precedence).orNull()
                 val r = build(right, precedence).orNull()
@@ -93,7 +95,7 @@ class SimpleMathParser : Parser {
            && this[index + 1] in '0' .. '9'
            // Make sure there are no other symbols before our given symbol,
            // or there is only a single operator before it.
-           && lastBefore(index).let { it == null || it in ops }
+           && lastBefore(index).let { it == null || it in OperationManager }
     }
 
     private fun String.lastBefore(index: Int): Char? {
@@ -111,25 +113,5 @@ class SimpleMathParser : Parser {
         }
         // If no symbol is found, we simply return null
         return null
-    }
-
-    // Maps an operator to a given precedence level
-    // TODO: Have this be managed by a dedicated repository later
-    private fun getPrecedence(op: Char): Int = when (op) {
-        '+', '-' -> 0
-        '*', '/' -> 1
-        '^'      -> 2
-        else     -> -1
-    }
-
-    // Maps an operation to a constructor function
-    private fun getOperator(
-        op: Char
-    ): OperatorFunction = when(op) {
-        '-'  -> { l, r -> Sub(l, r) }
-        '*'  -> { l, r -> Mul(l, r) }
-        '/'  -> { l, r -> Div(l, r) }
-        '^'  -> { l, r -> Exp(l, r) }
-        else -> { l, r -> Add(l, r) }
     }
 }
