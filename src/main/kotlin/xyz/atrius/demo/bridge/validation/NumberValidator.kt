@@ -19,7 +19,6 @@ class NumberValidator : Validator {
      * @return      Null if successful, or [AppError.InvalidConstant] if an issue is found.
      */
     override fun validate(input: String): AppError? {
-        println("Input: '$input': ${input.isNumber()}")
         return if (input.isNumber())
             null else AppError.InvalidConstant
     }
