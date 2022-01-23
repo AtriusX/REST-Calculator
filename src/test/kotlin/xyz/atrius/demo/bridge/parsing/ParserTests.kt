@@ -3,6 +3,13 @@ package xyz.atrius.demo.bridge.parsing
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
+/**
+ * @author Atrius
+ *
+ * Testing suite for expression parsers. This is used to parse a math
+ * expression into a [Node][xyz.atrius.demo.math.Node] tree which can
+ * be evaluated.
+ */
 @SpringBootTest
 class ParserTests {
 
