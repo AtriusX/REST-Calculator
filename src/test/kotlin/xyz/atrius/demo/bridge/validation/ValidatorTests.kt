@@ -13,6 +13,24 @@ import org.springframework.boot.test.context.SpringBootTest
 class ValidatorTests {
 
     @Test
+    fun `Test number validation`() {
+        with(NumberValidator()) {
+            // Valid values
+            assert(validate("0") == null)
+            assert(validate("10") == null)
+            assert(validate("-100") == null)
+            assert(validate("4.5") == null)
+            assert(validate(".03") == null)
+            // Invalid values
+            assert(validate("") != null)
+            assert(validate("undefined") != null)
+            assert(validate("null") != null)
+            assert(validate("abcdef") != null)
+            assert(validate("!!") != null)
+        }
+    }
+
+    @Test
     fun `Test expression validation`() {
         with(ExpressionValidator()) {
             // Valid expressions
