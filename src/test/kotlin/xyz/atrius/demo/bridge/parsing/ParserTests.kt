@@ -42,5 +42,35 @@ class ParserTests {
         assert(n.orNull()?.evaluate() == -3.0)
         val o = parse("-2 / -5")
         assert(o.orNull()?.evaluate() == 0.4)
+        // No whitespace test
+        val p = parse("2+5/4")
+        assert(p.orNull()?.evaluate() == 3.25)
+    }
+
+    @Test
+    fun `Test expression parser`() = with(ExpressionParser()) {
+        val a = parse("(3 - 5) / 4 + (10 - 2)")
+        assert(a.orNull()?.evaluate() == 7.5)
+        val b = parse("((4 + 9) / 3 * 2) / 10 ^ 2")
+        // Repeating decimal place
+        assert((b.orNull()?.evaluate() ?: -1.0) in 0.086 .. 0.087)
+        val c = parse("(2 + 5 / 4) ^ 3 * 10")
+        assert(c.orNull()?.evaluate() == 343.28125)
+        // No spaces test
+        val d = parse("(2+5/4)^3*10")
+        assert(d.orNull()?.evaluate() == 343.28125)
+        val e = parse("5/(2-4)*(10+(10-3))*10")
+        assert(e.orNull()?.evaluate() == -425.0)
+        // Invalid expressions
+        val f = parse(")))")
+        assert(f.isLeft())
+        val g = parse("(10+ 2-")
+        assert(g.isLeft())
+        val h = parse("--10")
+        assert(h.isLeft())
+        val i = parse("10 + - 5")
+        assert(i.isLeft())
+        val j = parse("10+- 5")
+        assert(j.isLeft())
     }
 }
