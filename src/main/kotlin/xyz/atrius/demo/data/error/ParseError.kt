@@ -10,4 +10,11 @@ package xyz.atrius.demo.data.error
  *
  * @param message The message associated with this parse error.
  */
-sealed class ParseError(message: String) : AppError(message)
+sealed class ParseError(message: String) : AppError(message) {
+
+    object InvalidOperation : ParseError("Unknown operation detected!")
+
+    object MalformedExpression : ParseError("Malformed expression!")
+
+    object EmptyExpression : ParseError("No expression provided!")
+}
