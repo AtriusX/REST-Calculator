@@ -1,6 +1,7 @@
 package xyz.atrius.demo.bridge.validation
 
-import xyz.atrius.demo.data.AppError
+import xyz.atrius.demo.data.error.AppError
+import xyz.atrius.demo.data.error.ValidationError
 
 /**
  * @author Atrius
@@ -19,5 +20,5 @@ interface Validator {
      * @param input The input to be validated.
      * @return      An [AppError] object if an error is raised, or null if no error is found.
      */
-    fun validate(input: String): AppError?
+    fun validate(input: String): ValidationError?
 }

@@ -1,12 +1,14 @@
 package xyz.atrius.demo.bridge.validation
 
-import xyz.atrius.demo.data.AppError
+import xyz.atrius.demo.data.error.AppError
+import xyz.atrius.demo.data.error.ValidationError
 
 /**
  * @author Atrius
  *
  * This validator is used to determine if a given input matches a valid
- * numeric format. If valid, the result is null, otherwise an [AppError.InvalidConstant]
+ * numeric format. If valid, the result is null, otherwise an
+ * [InvalidConstant][xyz.atrius.demo.data.error.ValidationError.InvalidConstant]
  * error is raised to the caller.
  */
 class NumberValidator : Validator {
@@ -16,11 +18,13 @@ class NumberValidator : Validator {
      * floating-point number.
      *
      * @param input The input string to validate.
-     * @return      Null if successful, or [AppError.InvalidConstant] if an issue is found.
+     * @return      Null if successful, or
+     *              [InvalidConstant][xyz.atrius.demo.data.error.ValidationError.InvalidConstant]
+     *              if an issue is found.
      */
-    override fun validate(input: String): AppError? {
+    override fun validate(input: String): ValidationError? {
         return if (input.isNumber())
-            null else AppError.InvalidConstant
+            null else ValidationError.InvalidConstant
     }
 
     // Matches integer and floating point numbers

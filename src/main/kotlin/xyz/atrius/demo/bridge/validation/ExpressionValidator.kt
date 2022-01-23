@@ -1,6 +1,8 @@
 package xyz.atrius.demo.bridge.validation
 
-import xyz.atrius.demo.data.AppError
+import xyz.atrius.demo.data.error.AppError
+import xyz.atrius.demo.data.error.ValidationError
+import xyz.atrius.demo.data.error.ValidationError.*
 
 /**
  * @author Atrius
@@ -25,7 +27,7 @@ class ExpressionValidator : Validator {
      * @param input The input string to validate.
      * @return      Any raised [AppError] instances, or null if successful.
      */
-    override fun validate(input: String): AppError? {
+    override fun validate(input: String): ValidationError? {
         var depth = 0
         var prev: Char? = null
         val cur = StringBuilder("")
@@ -51,7 +53,7 @@ class ExpressionValidator : Validator {
                 '(' -> {
                     // Check if the scope starts right after a number
                     if (cur.isNotEmpty())
-                        return AppError.UnexpectedSubexpression
+                        return UnexpectedSubexpression
                     depth++
                 }
                 // Close the current scope
@@ -60,7 +62,7 @@ class ExpressionValidator : Validator {
                     // of another scope or constant), or if we cause an
                     // underflow the scope depth
                     if (prev in ops || prev == '.' || prev == '(' || depth - 1 < 0)
-                        return AppError.UnexpectedSubexpressionTermination
+                        return UnexpectedSubexpressionTermination
                     depth--
                 }
                 // Track operators
@@ -68,13 +70,13 @@ class ExpressionValidator : Validator {
                     // Prevent operators aside from '-' from being places
                     // at the beginning of an expression
                     if (prev == null && c != '-')
-                        return AppError.UnexpectedOperator
+                        return UnexpectedOperator
                     // Handle duplicated operators
                     if (prev in ops) {
                         // Fail non-negative operators, duplicated negatives,
                         // and if the current item isn't empty
                         if (cur.isNotEmpty() || c != '-' || prev == '-')
-                            return AppError.UnexpectedOperator
+                            return UnexpectedOperator
                         // Append negative prefix
                         cur.append('-')
                     }
@@ -82,7 +84,7 @@ class ExpressionValidator : Validator {
                 // Build numbers from numeric values
                 in '0'..'9', '.' -> cur.append(c)
                 // Any other character is considered invalid
-                else -> return AppError.InvalidSymbol
+                else -> return InvalidSymbol
             }
             prev = c
         }
@@ -90,7 +92,7 @@ class ExpressionValidator : Validator {
         return when {
             cur.isNotEmpty() -> number.validate(cur.toString())
             depth == 0       -> null
-            else             -> AppError.UnexpectedTermination
+            else             -> UnexpectedTermination
         }
     }
 }

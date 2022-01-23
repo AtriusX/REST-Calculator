@@ -4,6 +4,7 @@ import arrow.core.Either
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import xyz.atrius.demo.data.*
+import xyz.atrius.demo.data.error.AppError
 import javax.servlet.http.HttpServletRequest
 import kotlin.random.Random
 

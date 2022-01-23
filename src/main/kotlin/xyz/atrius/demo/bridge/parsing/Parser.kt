@@ -1,7 +1,7 @@
 package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
-import xyz.atrius.demo.data.AppError
+import xyz.atrius.demo.data.error.AppError
 import xyz.atrius.demo.math.Node
 
 /**
