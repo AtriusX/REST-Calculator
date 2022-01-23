@@ -3,6 +3,12 @@ package xyz.atrius.demo.bridge.sanitizing
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
+/**
+ * @author Atrius
+ *
+ * Test suite for input sanitizers. This is used to determine if a given input
+ * sanitizer is reasonably able to sanitize a given input to something usable.
+ */
 @SpringBootTest
 class InputSanitizerTests {
 
