@@ -21,6 +21,10 @@ class Exp(
     override val operator: Char = '^'
 
     override fun operation(left: Node, right: Node): Double {
-        return left.evaluate().pow(right.evaluate())
+        return left.evaluate() exp right.evaluate()
     }
+
+    // Allows us to define our power function as "x exp y"
+    private infix fun Double.exp(other: Double): Double =
+        pow(other)
 }
