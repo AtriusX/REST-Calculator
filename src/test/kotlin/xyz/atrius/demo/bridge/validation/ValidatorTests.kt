@@ -1,11 +1,8 @@
 package xyz.atrius.demo.bridge.validation
 
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
-import xyz.atrius.demo.data.OperationManager
-import xyz.atrius.demo.math.op.*
 
 /**
  * @author Atrius
@@ -16,17 +13,6 @@ import xyz.atrius.demo.math.op.*
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ValidatorTests {
-
-    @BeforeAll
-    fun init() {
-        with(OperationManager) {
-            register('+', 0) { l, r -> Add(l, r) }
-            register('-', 0) { l, r -> Sub(l, r) }
-            register('*', 1) { l, r -> Mul(l, r) }
-            register('/', 1) { l, r -> Div(l, r) }
-            register('^', 2) { l, r -> Exp(l, r) }
-        }
-    }
 
     @Test
     fun `Test number validation`() = with(NumberValidator()) {
