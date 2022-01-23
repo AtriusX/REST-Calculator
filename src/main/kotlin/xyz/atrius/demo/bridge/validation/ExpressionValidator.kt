@@ -1,5 +1,6 @@
 package xyz.atrius.demo.bridge.validation
 
+import xyz.atrius.demo.data.OperationManager
 import xyz.atrius.demo.data.error.AppError
 import xyz.atrius.demo.data.error.ValidationError
 import xyz.atrius.demo.data.error.ValidationError.*
@@ -15,8 +16,6 @@ import xyz.atrius.demo.data.error.ValidationError.*
  */
 class ExpressionValidator : Validator {
 
-    private val ops: Set<Char> =
-        setOf('+', '-', '*', '/', '^')
     private val number: Validator =
         NumberValidator()
 
@@ -61,18 +60,18 @@ class ExpressionValidator : Validator {
                     // Terminate at the end of a scope (must follow the end
                     // of another scope or constant), or if we cause an
                     // underflow the scope depth
-                    if (prev in ops || prev == '.' || prev == '(' || depth - 1 < 0)
+                    if (prev in OperationManager || prev == '.' || prev == '(' || depth - 1 < 0)
                         return UnexpectedSubexpressionTermination
                     depth--
                 }
                 // Track operators
-                in ops -> {
+                in OperationManager -> {
                     // Prevent operators aside from '-' from being places
                     // at the beginning of an expression
                     if (prev == null && c != '-')
                         return UnexpectedOperator
                     // Handle duplicated operators
-                    if (prev in ops) {
+                    if (prev in OperationManager) {
                         // Fail non-negative operators, duplicated negatives,
                         // and if the current item isn't empty
                         if (cur.isNotEmpty() || c != '-' || prev == '-')
