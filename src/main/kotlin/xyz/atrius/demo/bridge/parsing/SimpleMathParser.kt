@@ -1,9 +1,6 @@
 package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
-import arrow.core.getOrHandle
-import arrow.core.orNull
-import xyz.atrius.demo.bridge.validation.NumberValidator
 import xyz.atrius.demo.data.error.ParseError
 import xyz.atrius.demo.math.Constant
 import xyz.atrius.demo.math.Node
@@ -45,8 +42,9 @@ class SimpleMathParser : Parser {
             // Make sure the expression is not empty
             if (value.isEmpty())
                 return Either.Left(ParseError.EmptyExpression)
-            // Make sure the expression isn't bordered by operators
-            if (value.first() in ops || value.last() in ops)
+            // Make sure the expression isn't bordered by operators aside from
+            val trimmed = value.trim()
+            if (trimmed.firstOrNull()?.let { it in ops && it != '-' } == true || trimmed.lastOrNull() in ops)
                 return Either.Left(ParseError.MalformedExpression)
             // Make sure the expression does not contain any invalid characters
             if (value.any { it !in ops && it != '.' && it !in '0' .. '9' && it != ' ' })
@@ -56,7 +54,12 @@ class SimpleMathParser : Parser {
                 return Either.Right(Constant(it))
             }
             // Find the rightmost instance of the next operator with the same precedence
-            val index = value.indexOfLast { getPrecedence(it) == precedence }
+            var index: Int = -1
+            for (i in value.lastIndex downTo 0)
+                if (getPrecedence(value[i]) == precedence && !value.skipOperator(i)) {
+                    index = i
+                    break
+                }
             // If the index is found
             if (index != -1) {
                 // The current operator
@@ -67,14 +70,21 @@ class SimpleMathParser : Parser {
                 // Get the constructor for this operator or throw an error if invalid
                 val create = getOperator(op)
                 // Build the left and right nodes, or raise an error if a failure occurs
-                val l = build(left, precedence).orNull()!!
-                val r = build(right, precedence).orNull()!!
+                val l = build(left, precedence).orNull()
+                val r = build(right, precedence).orNull()
+                if (l == null || r == null)
+                    return Either.Left(ParseError.MalformedExpression)
                 // Return the operator
                 return Either.Right(create(l, r))
             }
             return build(value, precedence + 1)
         }
         return build()
+    }
+
+    private fun String.skipOperator(index: Int): Boolean {
+        return this[index] == '-'
+           && length > index + 1 && this[index + 1] in '0' .. '9'
     }
 
     private fun getPrecedence(op: Char): Int = when (op) {

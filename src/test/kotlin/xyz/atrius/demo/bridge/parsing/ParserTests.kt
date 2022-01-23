@@ -31,5 +31,16 @@ class ParserTests {
         assert(i.isLeft())
         val j = parse("4 ## 5 *# 3 ! 2")
         assert(j.isLeft())
+        val k = parse("4 ++ 5")
+        assert(k.isLeft())
+        val l = parse("4 + + 5")
+        assert(l.isLeft())
+        // Test valid negatives
+        val m = parse("-2 + 5")
+        assert(m.orNull()?.evaluate() == 3.0)
+        val n = parse("2 + -5")
+        assert(n.orNull()?.evaluate() == -3.0)
+        val o = parse("-2 / -5")
+        assert(o.orNull()?.evaluate() == 0.4)
     }
 }
