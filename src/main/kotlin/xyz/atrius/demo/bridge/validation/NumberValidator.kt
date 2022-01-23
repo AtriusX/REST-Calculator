@@ -2,6 +2,7 @@ package xyz.atrius.demo.bridge.validation
 
 import xyz.atrius.demo.data.error.AppError
 import xyz.atrius.demo.data.error.ValidationError
+import xyz.atrius.demo.data.error.ValidationError.InvalidConstant
 
 /**
  * @author Atrius
@@ -24,7 +25,7 @@ class NumberValidator : Validator {
      */
     override fun validate(input: String): ValidationError? {
         return if (input.isNumber())
-            null else ValidationError.InvalidConstant
+            null else InvalidConstant
     }
 
     // Matches integer and floating point numbers
