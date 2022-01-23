@@ -34,7 +34,7 @@ class ExpressionParser : Parser {
      */
     override fun parse(input: String): Either<ParseError, Node> {
         val subs = arrayListOf<String>()
-        val expr = StringBuilder("")
+        val expr = StringBuilder()
         // Loop over our input to parse out the scopes of our expression
         var i = 0
         while (i < input.length) {

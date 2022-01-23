@@ -35,12 +35,17 @@ class ValidatorTests {
         // Valid expressions
         assert(validate("0") == null)
         assert(validate("2 + 2") == null)
+        assert(validate("2+2") == null)
         assert(validate("(2 / 3) + 6") == null)
+        assert(validate("(2/3)+6") == null)
         assert(validate("(2        / 3)              +          6    ") == null)
         assert(validate("(2 / (3 + 10)) + 6 ^ 3") == null)
+        assert(validate("(2 / (3+ 10) )+ 6^ 3") == null)
         assert(validate("2 ^ 3 ^ 4 / 5 * (5 - 4 + -3)") == null)
         assert(validate("-3") == null)
         assert(validate("0 * 0 - 0 / 0 + 0") == null)
+        assert(validate("2 ^ 2") == null)
+        assert(validate("2^2") == null)
         // Invalid expressions
         assert(validate("()") != null)
         assert(validate("+") != null)
