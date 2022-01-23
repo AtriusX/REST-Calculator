@@ -1,13 +1,16 @@
 package xyz.atrius.demo.bridge.parsing
 
+import arrow.core.Either
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import xyz.atrius.demo.data.error.ParseError
+import xyz.atrius.demo.math.Node
 
 /**
  * @author Atrius
  *
  * Testing suite for expression parsers. This is used to parse a math
- * expression into a [Node][xyz.atrius.demo.math.Node] tree which can
+ * expression into a [Node] tree which can
  * be evaluated.
  */
 @SpringBootTest
@@ -16,68 +19,53 @@ class ParserTests {
     @Test
     fun `Test simple math parser`() = with(SimpleMathParser()) {
         // Valid expressions
-        val a = parse("2 + 2")
-        assert(a.orNull()?.evaluate() == 4.0)
-        val b = parse("10 - 6 / 2 ^ 5 + 3")
-        assert(b.orNull()?.evaluate() == 12.8125)
-        val c = parse("3 + 2 / 10 * 5")
-        assert(c.orNull()?.evaluate() == 4.0)
-        val d = parse("2 + 5 / 3")
+        assertEquals(parse("2 + 2"), 4.0)
+        assertEquals(parse("10 - 6 / 2 ^ 5 + 3"), 12.8125)
+        assertEquals(parse("3 + 2 / 10 * 5"), 4.0)
         // Result is a repeating decimal
-        assert((d.orNull()?.evaluate() ?: -1.0) in 3.6 .. 3.7)
-        val e = parse("2 / 2 / 0")
-        assert(e.orNull()?.evaluate() == Double.POSITIVE_INFINITY)
-        val f = parse("0")
-        assert(f.orNull()?.evaluate() == 0.0)
+        assertIn(parse("2 + 5 / 3"), 3.6, 3.7)
+        assertEquals(parse("2 / 2 / 0"), Double.POSITIVE_INFINITY)
+        assertEquals(parse("0"), 0.0)
         // Invalid expressions
-        val g = parse("+2/")
-        assert(g.isLeft())
-        val h = parse("")
-        assert(h.isLeft())
-        val i = parse("4 # 5")
-        assert(i.isLeft())
-        val j = parse("4 ## 5 *# 3 ! 2")
-        assert(j.isLeft())
-        val k = parse("4 ++ 5")
-        assert(k.isLeft())
-        val l = parse("4 + + 5")
-        assert(l.isLeft())
+        assertFails(parse("+2/"))
+        assertFails(parse(""))
+        assertFails(parse("4 # 5"))
+        assertFails(parse("4 ## 5 *# 3 ! 2"))
+        assertFails(parse("4 ++ 5"))
+        assertFails(parse("4 + + 5"))
         // Test valid negatives
-        val m = parse("-2 + 5")
-        assert(m.orNull()?.evaluate() == 3.0)
-        val n = parse("2 + -5")
-        assert(n.orNull()?.evaluate() == -3.0)
-        val o = parse("-2 / -5")
-        assert(o.orNull()?.evaluate() == 0.4)
+        assertEquals(parse("-2 + 5"), 3.0)
+        assertEquals(parse("2 + -5"), -3.0)
+        assertEquals(parse("-2 / -5"), 0.4)
         // No whitespace test
-        val p = parse("2+5/4")
-        assert(p.orNull()?.evaluate() == 3.25)
+        assertEquals(parse("2+5/4"), 3.25)
     }
 
     @Test
     fun `Test expression parser`() = with(ExpressionParser()) {
-        val a = parse("(3 - 5) / 4 + (10 - 2)")
-        assert(a.orNull()?.evaluate() == 7.5)
-        val b = parse("((4 + 9) / 3 * 2) / 10 ^ 2")
+        assertEquals(parse("(3 - 5) / 4 + (10 - 2)"), 7.5)
         // Repeating decimal place
-        assert((b.orNull()?.evaluate() ?: -1.0) in 0.086 .. 0.087)
-        val c = parse("(2 + 5 / 4) ^ 3 * 10")
-        assert(c.orNull()?.evaluate() == 343.28125)
+        assertIn(parse("((4 + 9) / 3 * 2) / 10 ^ 2"), 0.086, 0.087)
+        assertEquals(parse("(2 + 5 / 4) ^ 3 * 10"), 343.28125)
         // No spaces test
-        val d = parse("(2+5/4)^3*10")
-        assert(d.orNull()?.evaluate() == 343.28125)
-        val e = parse("5/(2-4)*(10+(10-3))*10")
-        assert(e.orNull()?.evaluate() == -425.0)
+        assertEquals(parse("(2+5/4)^3*10"), 343.28125)
+        assertEquals(parse("5/(2-4)*(10+(10-3))*10"), -425.0)
         // Invalid expressions
-        val f = parse(")))")
-        assert(f.isLeft())
-        val g = parse("(10+ 2-")
-        assert(g.isLeft())
-        val h = parse("--10")
-        assert(h.isLeft())
-        val i = parse("10 + - 5")
-        assert(i.isLeft())
-        val j = parse("10+- 5")
-        assert(j.isLeft())
+        assertFails(parse(")))"))
+        assertFails(parse("(10+ 2-"))
+        assertFails(parse("--10"))
+        assertFails(parse("10 + - 5"))
+        assertFails(parse("10+- 5"))
     }
+
+    private fun assertEquals(input: Either<ParseError, Node>, expected: Double) =
+        assert(input.orNull()?.evaluate() == expected)
+
+    private fun assertIn(input: Either<ParseError, Node>, low: Double, high: Double) {
+        require(low < high)
+        assert((input.orNull()?.evaluate() ?: (low - 1))  in low..high)
+    }
+
+    private fun assertFails(input: Either<ParseError, Node>) =
+        assert(input.isLeft())
 }
