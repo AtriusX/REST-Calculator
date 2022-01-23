@@ -15,6 +15,8 @@ class Div(
     right: Node
 ) : BinaryOperator(left, right) {
 
+    override val order: Int = 1
+
     override val operator: Char = '/'
 
     override fun operation(left: Node, right: Node): Double {
