@@ -16,8 +16,6 @@ class Exp(
     right: Node
 ) : BinaryOperator(left, right) {
 
-    override val order: Int = 2
-
     override val operator: Char = '^'
 
     override fun operation(left: Node, right: Node): Double {

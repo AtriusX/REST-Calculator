@@ -15,8 +15,6 @@ class Add(
     right: Node
 ) : BinaryOperator(left, right) {
 
-    override val order: Int = 0
-
     override val operator: Char = '+'
 
     override fun operation(left: Node, right: Node): Double {

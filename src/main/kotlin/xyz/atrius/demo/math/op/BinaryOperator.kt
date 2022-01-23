@@ -15,12 +15,6 @@ abstract class BinaryOperator(
 ) : Node {
 
     /**
-     * Determines the order at which this operator occurs relative to others.
-     * The lower the order is set to, the higher the operator is in the tree.
-     */
-    abstract val order: Int
-
-    /**
      * Determines the character used in printing the expression.
      */
     abstract val operator: Char
