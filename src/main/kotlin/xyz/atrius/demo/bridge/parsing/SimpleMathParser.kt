@@ -1,12 +1,10 @@
 package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
-import arrow.core.left
 import xyz.atrius.demo.data.OperationManager
 import xyz.atrius.demo.data.error.ParseError
 import xyz.atrius.demo.math.Constant
 import xyz.atrius.demo.math.Node
-import xyz.atrius.demo.math.op.*
 
 /**
  * @author Atrius
@@ -27,7 +25,6 @@ class SimpleMathParser : Parser {
      * @return      The parsed node object, or a [ParseError].
      */
     override fun parse(input: String): Either<ParseError, Node> {
-        println(OperationManager)
         // Internal function to add precedence variable, since we
         // do not have the ability to add a parameter to an
         // overridden function.
