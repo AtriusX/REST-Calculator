@@ -10,7 +10,7 @@ package xyz.atrius.demo.data.error
  *
  * @param message The message associated with this parse error.
  */
-sealed class ParseError(message: String) : AppError(message) {
+sealed class ParseError(message: String) : AppError("Parsing error: $message") {
 
     /**
      * Occurs when an operator or non-standard character is detected in an

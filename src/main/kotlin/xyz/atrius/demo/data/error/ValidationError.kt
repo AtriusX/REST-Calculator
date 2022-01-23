@@ -9,7 +9,7 @@ package xyz.atrius.demo.data.error
  *
  * @param message The message associated with this validation error.
  */
-sealed class ValidationError(message: String) : AppError(message) {
+sealed class ValidationError(message: String) : AppError("Validation error: $message") {
 
     /**
      * Occurs when an operator is duplicated, or placed improperly (for example without a
