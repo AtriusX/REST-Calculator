@@ -77,7 +77,6 @@ class SimpleMathParser : Parser {
                 // Return the operator
                 return Either.Right(create(l, r))
             }
-            println(value)
             return build(value, precedence + 1)
         }
         return build()
