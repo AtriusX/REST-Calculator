@@ -77,16 +77,45 @@ class SimpleMathParser : Parser {
                 // Return the operator
                 return Either.Right(create(l, r))
             }
+            println(value)
             return build(value, precedence + 1)
         }
         return build()
     }
 
     private fun String.skipOperator(index: Int): Boolean {
+        // In certain cases we will need to skip an operator while evaluating
+        // our expressions. The only general case of this currently is the '-'
+        // operator, which can also double as a negative constant operator.
         return this[index] == '-'
-           && length > index + 1 && this[index + 1] in '0' .. '9'
+           // Make sure our '-' does not border the edge of our expression
+           && length > index + 1
+           // Make sure the next character over is numeric
+           && this[index + 1] in '0' .. '9'
+           // Make sure there are no other symbols before our given symbol,
+           // or there is only a single operator before it.
+           && lastBefore(index).let { it == null || it in ops }
     }
 
+    private fun String.lastBefore(index: Int): Char? {
+        // If we have an excessive amount of whitespace, we will want to make sure
+        // we can find the last non-whitespace character before a given location.
+        // Working backwards from our current position, we test our string for a
+        // value meeting these criteria
+        var temp = index - 1
+        while (temp >= 0) {
+            // If the current position corresponds to a non-whitespace symbol, we
+            // can return it back to the user
+            if (!this[temp].isWhitespace())
+                return this[temp]
+            temp--
+        }
+        // If no symbol is found, we simply return null
+        return null
+    }
+
+    // Maps an operator to a given precedence level
+    // TODO: Have this be managed by a dedicated repository later
     private fun getPrecedence(op: Char): Int = when (op) {
         '+', '-' -> 0
         '*', '/' -> 1
@@ -94,6 +123,7 @@ class SimpleMathParser : Parser {
         else     -> -1
     }
 
+    // Maps an operation to a constructor function
     private fun getOperator(
         op: Char
     ): OperatorFunction = when(op) {
