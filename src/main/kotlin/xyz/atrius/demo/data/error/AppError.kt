@@ -6,8 +6,8 @@ package xyz.atrius.demo.data.error
  * App errors are non-exception based messaging objects. Their primary purpose is to
  * raise errors in the scope of the application without needing to rely on try/catch
  * statements. AppError is the root for all errors within this application. Other
- * error scopes such as [ValidationError] also exist for scoping issues to better
- * specialized contexts.
+ * error scopes such as [ValidationError] or [ParseError] also exist for scoping
+ * issues to better specialized contexts.
  *
  * @suppress MemberVisibilityCanBePrivate Message may be used outside the error class.
  *

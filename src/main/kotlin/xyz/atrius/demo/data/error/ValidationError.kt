@@ -7,7 +7,7 @@ package xyz.atrius.demo.data.error
  * primary need for this is to provide feedback to REST requests if an issue in the format
  * of an expression is detected.
  *
- * @param message The message raised in our validation error.
+ * @param message The message associated with this validation error.
  */
 sealed class ValidationError(message: String) : AppError(message) {
 
