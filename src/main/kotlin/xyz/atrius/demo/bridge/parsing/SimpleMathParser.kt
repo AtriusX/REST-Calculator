@@ -1,8 +1,11 @@
 package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
+import arrow.core.Either.Left
+import arrow.core.Either.Right
 import xyz.atrius.demo.data.OperationManager
 import xyz.atrius.demo.data.error.ParseError
+import xyz.atrius.demo.data.error.ParseError.*
 import xyz.atrius.demo.math.Constant
 import xyz.atrius.demo.math.Node
 
@@ -34,22 +37,22 @@ class SimpleMathParser : Parser {
         ): Either<ParseError, Node> {
             // Make sure the expression is not empty
             if (value.isEmpty())
-                return Either.Left(ParseError.EmptyExpression)
+                return Left(EmptyExpression)
             // Make sure the expression isn't bordered by operators aside from
             val trimmed = value.trim()
             if (trimmed.firstOrNull()?.let { it in OperationManager && it != '-' } == true
                 || trimmed.lastOrNull() in OperationManager
-            ) return Either.Left(ParseError.MalformedExpression)
+            ) return Left(MalformedExpression)
             // Make sure the expression does not contain any invalid characters
             if (value.any {
                     it !in OperationManager
                     && it != '.'
                     && it !in '0' .. '9'
-                    && it != ' ' }
-            ) return Either.Left(ParseError.InvalidOperation)
+                    && it != ' '
+            }) return Left(InvalidOperation)
             // If the input is a number then we return it as a constant
             value.toDoubleOrNull()?.let {
-                return Either.Right(Constant(it))
+                return Right(Constant(it))
             }
             // Find the rightmost instance of the next operator with the same precedence
             var index: Int = -1
@@ -67,14 +70,14 @@ class SimpleMathParser : Parser {
                 val right = value.substring(index + 1)
                 // Get the constructor for this operator or throw an error if invalid
                 val create = OperationManager[op] ?:
-                    return Either.Left(ParseError.InvalidOperation)
+                    return Left(InvalidOperation)
                 // Build the left and right nodes, or raise an error if a failure occurs
                 val l = build(left, precedence).orNull()
                 val r = build(right, precedence).orNull()
                 if (l == null || r == null)
-                    return Either.Left(ParseError.MalformedExpression)
+                    return Left(MalformedExpression)
                 // Return the operator
-                return Either.Right(create(l, r))
+                return Right(create(l, r))
             }
             return build(value, precedence + 1)
         }

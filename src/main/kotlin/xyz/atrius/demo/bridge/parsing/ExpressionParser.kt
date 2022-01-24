@@ -1,6 +1,7 @@
 package xyz.atrius.demo.bridge.parsing
 
 import arrow.core.Either
+import arrow.core.Either.Left
 import arrow.core.getOrHandle
 import xyz.atrius.demo.data.error.ParseError
 import xyz.atrius.demo.math.Node
@@ -46,7 +47,7 @@ class ExpressionParser : Parser {
                 // If the block does not close, we can safely assume the
                 // expression is malformed
                 if (end == -1)
-                    return Either.Left(ParseError.MalformedExpression)
+                    return Left(ParseError.MalformedExpression)
                 // Now that we have our bounds, we can extract the expression
                 // and add it to our subexpression list
                 subs += input.substring(i + 1, end)
@@ -88,7 +89,7 @@ class ExpressionParser : Parser {
                     // may also have nested subexpressions which we will need to resolve.
                     // Any errors we encounter can be passed upwards
                     val res = parse(subs[ph]).getOrHandle {
-                        return Either.Left(it)
+                        return Left(it)
                     }
                     // Append the flattened evaluation result to our main expression
                     expr.append(res.evaluate())

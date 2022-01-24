@@ -1,6 +1,8 @@
 package xyz.atrius.demo.controller
 
 import arrow.core.Either
+import arrow.core.Either.Left
+import arrow.core.Either.Right
 import arrow.core.getOrHandle
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -50,15 +52,15 @@ class ApiController {
         val error = validation.validate(expression)
         // If an error is found, raise it back to the user
         if (error != null)
-            return Either.Left(error)
+            return Left(error)
         // Attempt to parse the expression into a tree, or raise
         // an error if one is present
         val tree = parsing.parse(expression).getOrHandle {
-            return Either.Left(it)
+            return Left(it)
         }
         // If our expression parsed correctly, we can now evaluate
         // and return our response back to the user
-        return Either.Right(
+        return Right(
             Answer(expression.replace(" ", ""), tree.evaluate())
         )
     }
