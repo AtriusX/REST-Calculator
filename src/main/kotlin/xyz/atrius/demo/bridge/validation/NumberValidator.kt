@@ -1,6 +1,5 @@
 package xyz.atrius.demo.bridge.validation
 
-import xyz.atrius.demo.data.error.AppError
 import xyz.atrius.demo.data.error.ValidationError
 import xyz.atrius.demo.data.error.ValidationError.InvalidConstant
 
@@ -9,8 +8,7 @@ import xyz.atrius.demo.data.error.ValidationError.InvalidConstant
  *
  * This validator is used to determine if a given input matches a valid
  * numeric format. If valid, the result is null, otherwise an
- * [InvalidConstant][xyz.atrius.demo.data.error.ValidationError.InvalidConstant]
- * error is raised to the caller.
+ * [InvalidConstant] error is raised to the caller.
  */
 class NumberValidator : Validator {
 

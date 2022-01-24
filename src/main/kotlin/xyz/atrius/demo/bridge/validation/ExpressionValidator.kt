@@ -1,5 +1,6 @@
 package xyz.atrius.demo.bridge.validation
 
+import xyz.atrius.demo.bridge.parsing.Parser
 import xyz.atrius.demo.data.OperationManager
 import xyz.atrius.demo.data.error.AppError
 import xyz.atrius.demo.data.error.ValidationError
@@ -9,10 +10,9 @@ import xyz.atrius.demo.data.error.ValidationError.*
  * @author Atrius
  *
  * This validator is used for validating the input as a valid mathematical
- * expression. This can be used ahead of a [Parser][xyz.atrius.demo.bridge.parsing.Parser]
- * object to determine if the given input is able to be properly used. If the
- * validator detects a formatting issue, then any issues found are raised via
- * an [AppError] object.
+ * expression. This can be used ahead of a [Parser] object to determine if
+ * the given input is able to be properly used. If the validator detects a
+ * formatting issue, then any issues found are raised via an [AppError] object.
  */
 class ExpressionValidator : Validator {
 
