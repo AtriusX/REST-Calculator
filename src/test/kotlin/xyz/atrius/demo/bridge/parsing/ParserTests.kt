@@ -11,8 +11,8 @@ import xyz.atrius.demo.math.Node
  * @author Atrius
  *
  * Testing suite for expression parsers. This is used to parse a math
- * expression into a [Node] tree which can
- * be evaluated.
+ * expression into a [Node] tree which can be evaluated for a numeric
+ * result.
  */
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
