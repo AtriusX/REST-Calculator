@@ -63,8 +63,8 @@ class ParserTests {
         assertFails(parse(")))"))
         assertFails(parse("(10+ 2-"))
         assertFails(parse("--10"))
-        assertFails(parse("10 + - 5"))
-        assertFails(parse("10+- 5"))
+        assertFails(parse("10 + - - 5"))
+        assertFails(parse("10+-- 5"))
     }
 
     private fun assertEquals(input: Either<ParseError, Node>, expected: Double) =
