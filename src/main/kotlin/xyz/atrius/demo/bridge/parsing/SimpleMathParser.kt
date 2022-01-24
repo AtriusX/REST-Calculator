@@ -32,7 +32,7 @@ class SimpleMathParser : Parser {
         // do not have the ability to add a parameter to an
         // overridden function.
         fun build(
-            value: String = input,
+            value: String = input.replace(" ", ""),
             precedence: Int = 0
         ): Either<ParseError, Node> {
             // Make sure the expression is not empty

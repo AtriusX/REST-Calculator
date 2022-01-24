@@ -30,8 +30,10 @@ class ExpressionValidator : Validator {
         var depth = 0
         var prev: Char? = null
         val cur = StringBuilder("")
+        // Prevent operator issues when no space is present before a minus
+        val values = input.replace("-", " -")
         // Loop over input characters
-        for (c in input) {
+        for (c in values) {
             when (c) {
                 // Clears the current item and skips to next character
                 ' ' -> {

@@ -41,6 +41,12 @@ class ParserTests {
         assertEquals(parse("-2 / -5"), 0.4)
         // No whitespace test
         assertEquals(parse("2+5/4"), 3.25)
+        // Whitespace in constants
+        assertEquals(parse("2. 000"), 2.0)
+        assertEquals(parse("2 .000"), 2.0)
+        assertEquals(parse("2 . 000"), 2.0)
+        assertEquals(parse("2.0  00"), 2.0)
+        assertEquals(parse("223 4.000"), 2234.0)
     }
 
     @Test
