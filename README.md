@@ -1,4 +1,4 @@
-# REST Calculator
+# REST Calculator 🧮
 
 This application is a 2-day project to get to learn a bit about Arrow and Spring Boot. The project is primarily a math expression processor, which uses Arrow to manage errors rather than through exceptions.
 
