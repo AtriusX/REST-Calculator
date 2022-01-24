@@ -8,7 +8,6 @@ plugins {
 }
 
 group = "xyz.atrius"
-version = "0.0.1-DEMO"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
@@ -37,4 +36,14 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+task<Exec>("dockerBuild") {
+	dependsOn(tasks["bootJar"])
+	commandLine("docker", "build", "--tag=${project.name}:latest", ".")
+}
+
+task<Exec>("dockerRun") {
+	dependsOn(tasks["dockerBuild"])
+	commandLine("docker", "run", "-p8080:8080", "demo:latest")
 }
