@@ -46,6 +46,7 @@ class ParserTests {
     @Test
     fun `Test expression parser`() = with(ExpressionParser()) {
         assertEquals(parse("(3 - 5) / 4 + (10 - 2)"), 7.5)
+        assertEquals(parse("(4 + 10) / 5 ^ 2"), 0.56)
         // Repeating decimal place
         assertIn(parse("((4 + 9) / 3 * 2) / 10 ^ 2"), 0.086, 0.087)
         assertEquals(parse("(2 + 5 / 4) ^ 3 * 10"), 343.28125)
