@@ -6,6 +6,14 @@ import org.springframework.boot.runApplication
 import xyz.atrius.demo.data.OperationManager
 import xyz.atrius.demo.math.op.*
 
+/**
+ * @author Atrius
+ *
+ * This application is a simple calculator which takes math expressions in the
+ * form of web requests. The application will receive the request, process it,
+ * and then return a response back to the client. If an error was found in the
+ * format of the expression, an error will be raised instead.
+ */
 @SpringBootApplication
 class DemoApplication {
 
